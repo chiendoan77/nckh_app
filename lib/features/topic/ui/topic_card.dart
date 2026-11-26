@@ -13,11 +13,19 @@ class TopicCard extends StatelessWidget {
     required this.topic,
     required this.onView,
     this.onEdit,
+    this.onTap,
+    this.detailLine,
+    this.viewLabel = 'Xem chi tiết',
+    this.showAuthor = true,
   });
 
   final Topic topic;
   final VoidCallback onView;
   final VoidCallback? onEdit;
+  final VoidCallback? onTap;
+  final String? detailLine;
+  final String viewLabel;
+  final bool showAuthor;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +33,12 @@ class TopicCard extends StatelessWidget {
         onEdit != null && topic.isMine && topic.status == TopicStatus.pending;
     return AppCard(
       statusColor: AppTokens.statusColor(topic.status),
+      onTap: onTap,
       footer: Wrap(
         spacing: 8,
         children: [
           AppButton(
-            label: 'Xem chi tiết',
+            label: viewLabel,
             kind: AppButtonKind.ghost,
             onPressed: onView,
           ),
@@ -59,17 +68,21 @@ class TopicCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             topic.title,
-            maxLines: 2,
+            maxLines: detailLine == null ? 2 : 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 4),
-          Text('Tạo bởi: ${topic.authorName}'),
+          if (showAuthor) Text('Tạo bởi: ${topic.authorName}'),
+          if (detailLine != null) ...[
+            const SizedBox(height: 4),
+            Text(detailLine!),
+          ],
           const SizedBox(height: 8),
           Expanded(
             child: Text(
               topic.description,
-              maxLines: 4,
+              maxLines: detailLine == null ? 4 : 2,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodyMedium,
             ),

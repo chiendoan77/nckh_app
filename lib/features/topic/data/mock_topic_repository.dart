@@ -1,5 +1,6 @@
 import '../../../core/constants/topic_status.dart';
 import '../../../core/network/api_error.dart';
+import '../../user/data/teacher.dart';
 import 'topic.dart';
 import 'topic_repository.dart';
 
@@ -128,6 +129,7 @@ class MockTopicRepository implements TopicRepository {
     status: status ?? topic.status,
     supervisor: topic.supervisor,
     memberNames: memberNames ?? topic.memberNames,
+    memberIds: topic.memberIds,
     phase: topic.phase,
     documents: topic.documents,
     isMine: isMine ?? topic.isMine,
@@ -175,6 +177,16 @@ List<Topic> _seedTopics() => [
     authorName: 'Phạm Gia Huy',
     description: 'Xây dựng nền tảng tra cứu tài liệu nghiên cứu.',
     status: TopicStatus.inProgress,
+    supervisor: _teacher001,
+    memberNames: ['Nguyễn Minh Anh'],
+    memberIds: ['SV001'],
+    phase: 'Giai đoạn 2: Xây dựng sản phẩm',
+    documents: [
+      TopicDocument(
+        name: 'Tài liệu hướng dẫn',
+        url: 'https://example.edu.vn/huong-dan.pdf',
+      ),
+    ],
   ),
   const Topic(
     id: 'DT06',
@@ -182,6 +194,7 @@ List<Topic> _seedTopics() => [
     authorName: 'Đặng Hải Nam',
     description: 'Ứng dụng thị giác máy tính nhận dạng biển báo.',
     status: TopicStatus.inProgress,
+    supervisor: _teacher002,
   ),
   const Topic(
     id: 'DT07',
@@ -189,20 +202,25 @@ List<Topic> _seedTopics() => [
     authorName: 'Võ Ngọc Mai',
     description: 'Giám sát độ ẩm bằng cảm biến.',
     status: TopicStatus.extended,
+    supervisor: _teacher001,
   ),
-  const Topic(
+  Topic(
     id: 'DT08',
     title: 'Trợ lý tra cứu tài liệu',
     authorName: 'Bùi Minh Châu',
     description: 'Tìm kiếm tài liệu học thuật tiếng Việt.',
     status: TopicStatus.completed,
+    supervisor: _teacher001,
+    gradingDeadline: DateTime(2026, 6, 30),
   ),
-  const Topic(
+  Topic(
     id: 'DT09',
     title: 'Phân loại rác thải tại nguồn',
     authorName: 'Hoàng Đức Long',
     description: 'Nghiên cứu phương pháp phân loại rác thải.',
     status: TopicStatus.completed,
+    supervisor: _teacher001,
+    gradingDeadline: DateTime(2026, 7, 15),
   ),
   const Topic(
     id: 'DT10',
@@ -218,11 +236,29 @@ List<Topic> _seedTopics() => [
     description: 'Xây dựng bộ dữ liệu hiện vật địa phương.',
     status: TopicStatus.draft,
   ),
-  const Topic(
+  Topic(
     id: 'DT12',
     title: 'Ứng dụng robot hướng dẫn tham quan',
     authorName: 'Đỗ Phương Linh',
     description: 'Nghiên cứu robot hướng dẫn trong bảo tàng.',
     status: TopicStatus.completed,
+    supervisor: _teacher001,
+    gradingDeadline: DateTime(2026, 8, 1),
   ),
 ];
+
+const _teacher001 = Teacher(
+  id: 'GV001',
+  fullName: 'Trần Văn Bình',
+  degree: 'Tiến sĩ',
+  faculty: 'Công nghệ thông tin',
+  email: 'binh.tran@example.edu.vn',
+);
+
+const _teacher002 = Teacher(
+  id: 'GV002',
+  fullName: 'Lê Thu Hà',
+  degree: 'Tiến sĩ',
+  faculty: 'Công nghệ thông tin',
+  email: 'ha.le@example.edu.vn',
+);

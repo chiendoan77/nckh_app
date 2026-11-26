@@ -47,4 +47,15 @@ void main() {
     expect(topic.documents, isEmpty);
     expect(topic.gradingDeadline, isNull);
   });
+
+  test('Đọc mã và tên sinh viên tham gia từ JSON hội viên dạng đối tượng', () {
+    final topic = Topic.fromJson({
+      'thanhVien': [
+        {'maSv': 'SV001', 'hoTen': 'Nguyễn Minh Anh'},
+      ],
+    });
+
+    expect(topic.memberNames, ['Nguyễn Minh Anh']);
+    expect(topic.memberIds, ['SV001']);
+  });
 }

@@ -19,6 +19,10 @@ final gradesProvider = FutureProvider.autoDispose.family<List<Grade>, String>(
       ref.watch(gradeRepositoryProvider).listForStudent(studentId),
 );
 
+final gradeProvider = FutureProvider.autoDispose.family<Grade?, String>(
+  (ref, topicId) => ref.watch(gradeRepositoryProvider).get(topicId),
+);
+
 final gradeSearchProvider = StateProvider.autoDispose<String>((_) => '');
 
 final visibleGradesProvider = Provider.autoDispose
