@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/env.dart';
+import 'env.dart';
 import '../auth/session.dart';
 
 final dioProvider = Provider<Dio>((ref) {

@@ -5,3 +5,4 @@ Các quyết định nghiệp vụ đã chốt được ghi tại `AGENTS.md` (D
 Trong giai đoạn khởi tạo P0 chưa phát sinh quyết định ngoài các nội dung đã chốt.
 
 - P5: Thêm package `archive` để mock xuất workbook `.xlsx` hợp lệ thay vì đổi đuôi cho dữ liệu văn bản.
+- P8: Đặt khai báo `Env` trong `core/network` để phần mạng không phụ thuộc ngược vào `app`; giữ `app/env.dart` làm export tương thích.
