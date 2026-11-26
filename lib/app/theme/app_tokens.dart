@@ -7,11 +7,13 @@ class AppTokens {
   static const text = Color(0xFF111111);
   static const sidebar = Color(0xFF0F2A3D);
   static const sidebarText = Color(0xFFFFFFFF);
+  static const sidebarActive = Color(0xFF25485F);
   static const border = Color(0xFFD0D5DD);
   static const success = Color(0xFF12B76A);
   static const danger = Color(0xFFD92D20);
   static const adminBg = Color(0xFFFFE8CC);
   static const adminSidebar = Color(0xFFFFD8A8);
+  static const adminSidebarActive = Color(0xFFFFC078);
   static const adminText = Color(0xFF000000);
 
   static Color statusColor(TopicStatus status) => switch (status) {
