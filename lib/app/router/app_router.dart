@@ -1,8 +1,9 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/auth/session.dart';
+import '../../core/constants/user_role.dart';
 import '../../features/admin/student_manage_page.dart';
 import '../../features/admin/teacher_manage_page.dart';
 import '../../features/auth/ui/login_page.dart';
@@ -16,6 +17,8 @@ import '../../features/student/topic_register_page.dart';
 import '../../features/teacher/active_topics_page.dart';
 import '../../features/teacher/completed_topics_page.dart';
 import '../../shared/layout/app_shell.dart';
+import '../../shared/widgets/state_views.dart';
+import '../../features/user/ui/profile_panel.dart';
 import 'paths.dart';
 import 'role_access.dart';
 
@@ -64,7 +67,31 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       ShellRoute(
-        builder: (_, _, child) => AppShell(child: child),
+        builder: (_, _, child) => AppShell(
+          child: child,
+          profileBuilder: (context, session) {
+            final studentId = session.user.studentId;
+            if (session.activeRole == UserRole.student) {
+              return studentId == null
+                  ? const EmptyView('Không tìm thấy mã sinh viên.')
+                  : ProfilePanel(studentId: studentId);
+            }
+            return Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    session.user.name,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(session.activeRole.label),
+                ],
+              ),
+            );
+          },
+        ),
         routes: [
           GoRoute(
             path: Paths.studentTopics,

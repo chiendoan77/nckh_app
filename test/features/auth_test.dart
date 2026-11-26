@@ -7,8 +7,22 @@ import 'package:nckh_app/app/router/paths.dart';
 import 'package:nckh_app/app/theme/app_tokens.dart';
 import 'package:nckh_app/core/auth/session.dart';
 import 'package:nckh_app/shared/layout/app_shell.dart';
+import 'package:nckh_app/shared/widgets/user_avatar.dart';
 
 void main() {
+  testWidgets('Sinh viên mở hồ sơ đầy đủ từ ảnh đại diện', (tester) async {
+    final container = await _loginAs(tester, 'sv001', '123456');
+    addTearDown(container.dispose);
+
+    await tester.tap(find.byType(UserAvatar));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mã sinh viên'), findsOneWidget);
+    expect(find.text('Nguyễn Minh Anh'), findsNWidgets(2));
+    expect(find.text('Chuyên ngành'), findsOneWidget);
+    expect(find.text('Chỉnh sửa'), findsNWidgets(2));
+  });
+
   testWidgets('Sai mật khẩu báo lỗi và vẫn ở trang đăng nhập', (tester) async {
     final container = await _openLogin(tester);
     addTearDown(container.dispose);

@@ -5,10 +5,16 @@ import '../../shared/widgets/side_panel.dart';
 import '../../shared/widgets/user_avatar.dart';
 
 class TopBar extends StatelessWidget {
-  const TopBar({super.key, required this.session, required this.showMenu});
+  const TopBar({
+    super.key,
+    required this.session,
+    required this.showMenu,
+    this.profileBuilder,
+  });
 
   final Session session;
   final bool showMenu;
+  final Widget Function(BuildContext, Session)? profileBuilder;
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -48,25 +54,25 @@ class TopBar extends StatelessWidget {
             customBorder: const CircleBorder(),
             onTap: () => showSidePanel(
               context,
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      session.user.name,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(session.activeRole.label),
-                  ],
-                ),
-              ),
+              profileBuilder?.call(context, session) ??
+                  _summary(context, session),
             ),
             child: UserAvatar(name: session.user.name),
           ),
         ],
       ),
+    ),
+  );
+
+  Widget _summary(BuildContext context, Session session) => Padding(
+    padding: const EdgeInsets.all(24),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(session.user.name, style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 8),
+        Text(session.activeRole.label),
+      ],
     ),
   );
 }

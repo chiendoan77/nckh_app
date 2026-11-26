@@ -5,4 +5,8 @@ void main() {
   test('Định dạng ngày theo kiểu ngày/tháng/năm', () {
     expect(formatDate(DateTime(2026, 11, 26)), '26/11/2026');
   });
+
+  test('Định dạng điểm GPA theo cách viết số tiếng Việt', () {
+    expect(formatGpa(3.42), '3,42');
+  });
 }

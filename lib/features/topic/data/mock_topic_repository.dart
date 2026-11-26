@@ -223,6 +223,6 @@ List<Topic> _seedTopics() => [
     title: 'Ứng dụng robot hướng dẫn tham quan',
     authorName: 'Đỗ Phương Linh',
     description: 'Nghiên cứu robot hướng dẫn trong bảo tàng.',
-    status: TopicStatus.draft,
+    status: TopicStatus.completed,
   ),
 ];

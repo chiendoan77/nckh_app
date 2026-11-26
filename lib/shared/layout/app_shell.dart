@@ -7,9 +7,10 @@ import 'sidebar.dart';
 import 'top_bar.dart';
 
 class AppShell extends ConsumerWidget {
-  const AppShell({super.key, required this.child});
+  const AppShell({super.key, required this.child, this.profileBuilder});
 
   final Widget child;
+  final Widget Function(BuildContext, Session)? profileBuilder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +29,11 @@ class AppShell extends ConsumerWidget {
           Expanded(
             child: Column(
               children: [
-                TopBar(session: session, showMenu: !isWide),
+                TopBar(
+                  session: session,
+                  showMenu: !isWide,
+                  profileBuilder: profileBuilder,
+                ),
                 const Divider(height: 1),
                 Expanded(child: child),
               ],
