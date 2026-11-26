@@ -24,7 +24,7 @@ class AppCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: AppTokens.surface,
       border: Border.all(color: AppTokens.border),
       borderRadius: _radius,
     ),

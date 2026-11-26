@@ -27,6 +27,7 @@ class _HexagonPainter extends CustomPainter {
     final inner = _hexagon(center, radius * 0.62);
     canvas.drawPath(outer, Paint()..color = AppTokens.sidebar);
     canvas.drawPath(inner, Paint()..color = Colors.white);
+    canvas.drawCircle(center, radius * 0.1, Paint()..color = AppTokens.accent);
   }
 
   Path _hexagon(Offset center, double radius) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_button.dart';
+import 'dialog_frame.dart';
 
 Future<bool> showConfirmDialog(
   BuildContext context,
@@ -9,8 +10,8 @@ Future<bool> showConfirmDialog(
 }) async {
   final confirmed = await showDialog<bool>(
     context: context,
-    builder: (context) => AlertDialog(
-      content: Text(message),
+    builder: (context) => DialogFrame(
+      maxWidth: 440,
       actions: [
         AppButton(
           label: 'Đóng',
@@ -23,6 +24,7 @@ Future<bool> showConfirmDialog(
           onPressed: () => Navigator.pop(context, true),
         ),
       ],
+      child: Text(message, style: Theme.of(context).textTheme.bodyLarge),
     ),
   );
   return confirmed ?? false;

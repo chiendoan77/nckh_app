@@ -12,17 +12,28 @@ class StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = AppTokens.statusColor(status);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: const BorderRadius.all(AppTokens.cardRadius),
+        border: Border.all(color: color.withValues(alpha: 0.45)),
+        borderRadius: const BorderRadius.all(AppTokens.controlRadius),
       ),
-      child: Text(
-        status.label,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: Theme.of(context).colorScheme.onSurface,
-          fontWeight: FontWeight.w600,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            status.label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

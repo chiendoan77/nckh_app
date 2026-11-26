@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/network/api_error.dart';
 import 'app_button.dart';
 import 'app_toast.dart';
+import 'dialog_frame.dart';
 
 class FormDialog extends StatefulWidget {
   const FormDialog({
@@ -49,11 +50,13 @@ class _FormDialogState extends State<FormDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: Text(widget.title),
-    content: SingleChildScrollView(
-      child: Form(key: _formKey, child: widget.child),
-    ),
+  Widget build(BuildContext context) => DialogFrame(
+    title: widget.title,
+    onClose: () {
+      if (!_isSubmitting) {
+        Navigator.pop(context);
+      }
+    },
     actions: [
       AppButton(
         label: 'Hủy bỏ',
@@ -65,5 +68,6 @@ class _FormDialogState extends State<FormDialog> {
         onPressed: _isSubmitting ? null : _submit,
       ),
     ],
+    child: Form(key: _formKey, child: widget.child),
   );
 }

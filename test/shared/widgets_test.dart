@@ -4,10 +4,56 @@ import 'package:nckh_app/app/theme/app_theme.dart';
 import 'package:nckh_app/app/theme/app_tokens.dart';
 import 'package:nckh_app/core/constants/topic_status.dart';
 import 'package:nckh_app/shared/widgets/app_button.dart';
+import 'package:nckh_app/shared/widgets/dialog_frame.dart';
+import 'package:nckh_app/shared/widgets/pie_chart_box.dart';
 import 'package:nckh_app/shared/widgets/state_views.dart';
 import 'package:nckh_app/shared/widgets/status_badge.dart';
 
 void main() {
+  testWidgets('Biểu đồ vòng hiển thị tổng số ở tâm', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 700,
+            height: 500,
+            child: PieChartBox(
+              slices: const [
+                PieSlice(label: 'HỦY', value: 3, color: Colors.red),
+                PieSlice(label: 'DUYỆT', value: 8, color: Colors.green),
+                PieSlice(label: 'TRỄ', value: 2, color: Colors.orange),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Tổng số'), findsOneWidget);
+    expect(find.text('13'), findsOneWidget);
+  });
+
+  testWidgets('Khung hộp thoại hiển thị tiêu đề và gọi đóng', (tester) async {
+    var wasClosed = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: DialogFrame(
+            title: 'Chi tiết đề tài',
+            actions: const [],
+            onClose: () => wasClosed = true,
+            child: const Text('Nội dung'),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Chi tiết đề tài'), findsOneWidget);
+    await tester.tap(find.byTooltip('Đóng'));
+
+    expect(wasClosed, isTrue);
+  });
+
   test('Theme dùng màu chủ đạo và kiểu điều khiển đã thống nhất', () {
     final theme = AppTheme.of(null);
     final buttonStyle = theme.filledButtonTheme.style!;

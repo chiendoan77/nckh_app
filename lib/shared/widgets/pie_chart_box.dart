@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../app/theme/app_tokens.dart';
+
 class PieSlice {
   const PieSlice({
     required this.label,
@@ -21,25 +23,44 @@ class PieChartBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
+      final total = slices.fold<int>(0, (sum, slice) => sum + slice.value);
       final chart = SizedBox(
         width: 280,
         height: 260,
         child: Semantics(
           label: 'Biểu đồ thống kê đề tài',
-          child: PieChart(
-            PieChartData(
-              sectionsSpace: 2,
-              sections: slices
-                  .map(
-                    (slice) => PieChartSectionData(
-                      value: slice.value.toDouble(),
-                      color: slice.color,
-                      radius: 92,
-                      showTitle: false,
-                    ),
-                  )
-                  .toList(),
-            ),
+          value: 'Tổng số: $total',
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              PieChart(
+                PieChartData(
+                  sectionsSpace: 2,
+                  centerSpaceRadius: 56,
+                  sections: slices
+                      .map(
+                        (slice) => PieChartSectionData(
+                          value: slice.value.toDouble(),
+                          color: slice.color,
+                          radius: 92,
+                          showTitle: false,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('$total', style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    'Tổng số',
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: AppTokens.textMuted),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       );
@@ -53,7 +74,12 @@ class PieChartBox extends StatelessWidget {
                 Expanded(child: details),
               ],
             )
-          : Column(children: [chart, details]);
+          : SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [chart, details],
+              ),
+            );
     },
   );
 
@@ -67,7 +93,14 @@ class PieChartBox extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               children: [
-                Container(width: 16, height: 16, color: slice.color),
+                Container(
+                  width: 7,
+                  height: 7,
+                  decoration: BoxDecoration(
+                    color: slice.color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
                 const SizedBox(width: 12),
                 Expanded(child: Text(slice.label)),
                 Text(
