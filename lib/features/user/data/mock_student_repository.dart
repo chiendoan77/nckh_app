@@ -3,16 +3,7 @@ import 'student.dart';
 import 'student_repository.dart';
 
 class MockStudentRepository implements StudentRepository {
-  final List<Student> _students = [
-    Student(
-      id: 'SV001',
-      fullName: 'Nguyễn Minh Anh',
-      birthDate: DateTime(2003, 5, 14),
-      major: 'Công nghệ thông tin',
-      gpa: 3.42,
-      status: StudentStatus.active,
-    ),
-  ];
+  final List<Student> _students = _seedStudents();
 
   @override
   Future<List<Student>> list() async {
@@ -63,3 +54,27 @@ class MockStudentRepository implements StudentRepository {
   Future<void> _delay() =>
       Future<void>.delayed(const Duration(milliseconds: 300));
 }
+
+List<Student> _seedStudents() => [
+  Student(
+    id: 'SV001',
+    fullName: 'Nguyễn Minh Anh',
+    birthDate: DateTime(2003, 5, 14),
+    major: 'Công nghệ thông tin',
+    gpa: 3.42,
+    status: StudentStatus.active,
+  ),
+  for (var index = 2; index <= 25; index++)
+    Student(
+      id: 'SV${index.toString().padLeft(3, '0')}',
+      fullName: 'Sinh viên $index',
+      major: const [
+        'Công nghệ thông tin',
+        'Kỹ thuật',
+        'Kinh tế',
+        'Ngoại ngữ',
+      ][index % 4],
+      gpa: 2 + (index % 20) / 10,
+      status: index <= 20 ? StudentStatus.active : StudentStatus.suspended,
+    ),
+];

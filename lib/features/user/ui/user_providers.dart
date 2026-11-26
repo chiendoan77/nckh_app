@@ -21,6 +21,10 @@ final studentProvider = FutureProvider.autoDispose.family<Student?, String>(
   (ref, id) => ref.watch(studentRepositoryProvider).get(id),
 );
 
+final studentsProvider = FutureProvider.autoDispose<List<Student>>(
+  (ref) => ref.watch(studentRepositoryProvider).list(),
+);
+
 final teacherRepositoryProvider = Provider<TeacherRepository>(
   (ref) => Env.useMock
       ? MockTeacherRepository()
