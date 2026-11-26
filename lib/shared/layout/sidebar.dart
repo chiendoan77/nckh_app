@@ -46,14 +46,11 @@ class Sidebar extends ConsumerWidget {
             ),
             const Divider(),
             for (final item in navItemsByRole[role] ?? const [])
-              ListTile(
-                leading: Icon(item.icon),
-                title: Text(item.label),
+              _NavTile(
+                item: item,
                 selected: location == item.path,
-                selectedTileColor: activeColor,
-                textColor: foreground,
-                iconColor: foreground,
-                selectedColor: foreground,
+                foreground: foreground,
+                activeColor: activeColor,
                 onTap: () => context.go(item.path),
               ),
             const Spacer(),
@@ -82,3 +79,61 @@ String _roleTitle(UserRole role) => switch (role) {
   UserRole.manager => 'Quản lý',
   UserRole.admin => 'Admin',
 };
+
+class _NavTile extends StatelessWidget {
+  const _NavTile({
+    required this.item,
+    required this.selected,
+    required this.foreground,
+    required this.activeColor,
+    required this.onTap,
+  });
+
+  final NavItem item;
+  final bool selected;
+  final Color foreground;
+  final Color activeColor;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final borderRadius = BorderRadius.all(AppTokens.controlRadius);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      child: Material(
+        color: selected ? activeColor : Colors.transparent,
+        borderRadius: borderRadius,
+        child: InkWell(
+          borderRadius: borderRadius,
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 3,
+                  height: 20,
+                  child: ColoredBox(
+                    color: selected ? AppTokens.accent : Colors.transparent,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Icon(item.icon, size: 20, color: foreground),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    item.label,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: foreground,
+                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

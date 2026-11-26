@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme/app_tokens.dart';
 import '../../core/auth/session.dart';
 import '../../shared/widgets/side_panel.dart';
 import '../../shared/widgets/user_avatar.dart';
@@ -17,8 +18,12 @@ class TopBar extends StatelessWidget {
   final Widget Function(BuildContext, Session)? profileBuilder;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(BuildContext context) => Container(
     height: 64,
+    decoration: const BoxDecoration(
+      color: AppTokens.surface,
+      border: Border(bottom: BorderSide(color: AppTokens.border)),
+    ),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -33,9 +38,13 @@ class TopBar extends StatelessWidget {
             ),
           Expanded(
             child: Text(
-              'Trường Đại học Quy Nhơn',
+              'TRƯỜNG ĐẠI HỌC QUY NHƠN',
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                letterSpacing: 1.2,
+                color: AppTokens.textMuted,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           IconButton(

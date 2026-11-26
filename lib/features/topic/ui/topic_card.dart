@@ -65,7 +65,7 @@ class TopicCard extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             topic.title,
             maxLines: detailLine == null ? 2 : 1,
@@ -78,7 +78,7 @@ class TopicCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(detailLine!),
           ],
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Expanded(
             child: Text(
               topic.description,

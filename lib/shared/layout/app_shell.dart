@@ -22,6 +22,7 @@ class AppShell extends ConsumerWidget {
     final isWide = MediaQuery.sizeOf(context).width >= 900;
     final sidebar = Sidebar(role: session.activeRole);
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: isWide ? null : Drawer(child: sidebar),
       body: Row(
         children: [
@@ -34,8 +35,12 @@ class AppShell extends ConsumerWidget {
                   showMenu: !isWide,
                   profileBuilder: profileBuilder,
                 ),
-                const Divider(height: 1),
-                Expanded(child: child),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(isWide ? 24 : 16),
+                    child: child,
+                  ),
+                ),
               ],
             ),
           ),

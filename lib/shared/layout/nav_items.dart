@@ -13,20 +13,20 @@ class NavItem {
 
 const navItemsByRole = <UserRole, List<NavItem>>{
   UserRole.student: [
-    NavItem('Đăng ký đề tài', Paths.studentTopics, Icons.app_registration),
-    NavItem('Tra cứu điểm', Paths.studentGrades, Icons.grade),
+    NavItem('Đăng ký đề tài', Paths.studentTopics, Icons.assignment_outlined),
+    NavItem('Tra cứu điểm', Paths.studentGrades, Icons.grade_outlined),
   ],
   UserRole.teacher: [
     NavItem('Công việc', Paths.teacherActive, Icons.work_outline),
-    NavItem('Hoàn thành', Paths.teacherCompleted, Icons.task_alt),
+    NavItem('Hoàn thành', Paths.teacherCompleted, Icons.check_circle_outline),
   ],
   UserRole.manager: [
-    NavItem('Danh sách đề tài', Paths.managerTopics, Icons.list_alt),
-    NavItem('Hội đồng chấm', Paths.managerCouncils, Icons.groups),
+    NavItem('Danh sách đề tài', Paths.managerTopics, Icons.list_alt_outlined),
+    NavItem('Hội đồng chấm', Paths.managerCouncils, Icons.groups_outlined),
     NavItem('Thống kê', Paths.managerStats, Icons.pie_chart_outline),
   ],
   UserRole.admin: [
-    NavItem('Sinh viên', Paths.adminStudents, Icons.school),
-    NavItem('Giảng viên', Paths.adminTeachers, Icons.person_pin),
+    NavItem('Sinh viên', Paths.adminStudents, Icons.school_outlined),
+    NavItem('Giảng viên', Paths.adminTeachers, Icons.person_outline),
   ],
 };
