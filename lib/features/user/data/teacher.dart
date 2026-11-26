@@ -27,4 +27,13 @@ class Teacher {
         .map((code) => UserRole.fromApi('$code'))
         .toList(),
   );
+
+  Map<String, Object?> toJson() => {
+    'maGv': id,
+    'hoTen': fullName,
+    'hocVi': degree,
+    'khoa': faculty,
+    'email': email,
+    'chucVu': positions.map((role) => role.apiCode).toList(),
+  };
 }

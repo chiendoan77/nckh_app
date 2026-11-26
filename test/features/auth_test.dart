@@ -149,7 +149,7 @@ void main() {
     );
     expect(container.read(sessionProvider)?.activeRole.name, 'manager');
     await _openMenu(tester);
-    expect(find.text('Danh sách đề tài'), findsNWidgets(2));
+    expect(find.text('Danh sách đề tài'), findsOneWidget);
     expect(find.text('Hội đồng chấm'), findsOneWidget);
     expect(find.text('Thống kê'), findsOneWidget);
   });

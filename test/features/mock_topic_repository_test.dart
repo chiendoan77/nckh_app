@@ -25,4 +25,24 @@ void main() {
       );
     },
   );
+
+  test('Phê duyệt đề tài đang chờ duyệt', () async {
+    final repository = MockTopicRepository();
+
+    await repository.approve('DT03');
+    final approved = await repository.list(status: TopicStatus.approved);
+
+    expect(approved.map((topic) => topic.id), contains('DT03'));
+  });
+
+  test('Gia hạn đề tài đang thực hiện và lưu hạn chấm mới', () async {
+    final repository = MockTopicRepository();
+    final deadline = DateTime(2026, 12, 31);
+
+    await repository.extend('DT05', newDeadline: deadline);
+    final extended = await repository.list(status: TopicStatus.extended);
+    final topic = extended.firstWhere((item) => item.id == 'DT05');
+
+    expect(topic.gradingDeadline, deadline);
+  });
 }
