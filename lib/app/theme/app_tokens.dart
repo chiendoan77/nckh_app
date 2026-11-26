@@ -30,6 +30,8 @@ class AppTokens {
   };
 
   static const controlRadius = Radius.circular(6);
+  static const checkboxRadius = Radius.circular(3);
+  static const tooltipRadius = Radius.circular(4);
   static const cardRadius = Radius.circular(14);
   static const readableWidth = 650.0;
   static const sidebarWidth = 260.0;

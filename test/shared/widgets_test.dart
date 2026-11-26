@@ -8,6 +8,23 @@ import 'package:nckh_app/shared/widgets/state_views.dart';
 import 'package:nckh_app/shared/widgets/status_badge.dart';
 
 void main() {
+  test('Theme dùng màu chủ đạo và kiểu điều khiển đã thống nhất', () {
+    final theme = AppTheme.of(null);
+    final buttonStyle = theme.filledButtonTheme.style!;
+
+    expect(theme.colorScheme.primary, AppTokens.sidebar);
+    expect(theme.colorScheme.onPrimary, AppTokens.sidebarText);
+    expect(buttonStyle.elevation?.resolve({}), 0);
+    expect(
+      buttonStyle.padding?.resolve({}),
+      const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+    );
+    expect(buttonStyle.textStyle?.resolve({})?.fontWeight, FontWeight.w600);
+    expect(theme.inputDecorationTheme.filled, isTrue);
+    expect(theme.inputDecorationTheme.fillColor, AppTokens.surface);
+    expect(theme.progressIndicatorTheme.color, AppTokens.sidebar);
+  });
+
   testWidgets('Hiển thị nhãn cho đủ bảy trạng thái', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
