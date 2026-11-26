@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/user_role.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/dialog_frame.dart';
 
 Future<UserRole?> showRolePicker(BuildContext context) => showDialog<UserRole>(
   context: context,
@@ -12,9 +13,16 @@ class RolePicker extends StatelessWidget {
   const RolePicker({super.key});
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Chọn chức vụ'),
-    content: Column(
+  Widget build(BuildContext context) => DialogFrame(
+    title: 'Chọn chức vụ',
+    actions: [
+      AppButton(
+        label: 'Hủy',
+        kind: AppButtonKind.ghost,
+        onPressed: () => Navigator.pop(context),
+      ),
+    ],
+    child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         for (final role in [UserRole.teacher, UserRole.manager])
@@ -32,11 +40,5 @@ class RolePicker extends StatelessWidget {
           ),
       ],
     ),
-    actions: [
-      TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Hủy'),
-      ),
-    ],
   );
 }

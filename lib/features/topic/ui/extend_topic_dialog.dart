@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/utils/formatters.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/dialog_frame.dart';
 import '../data/topic.dart';
 
 Future<DateTime?> showExtendTopicDialog(BuildContext context, Topic topic) =>
@@ -40,9 +41,22 @@ class _ExtendTopicDialogState extends State<ExtendTopicDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Gia hạn đề tài'),
-    content: Column(
+  Widget build(BuildContext context) => DialogFrame(
+    title: 'Gia hạn đề tài',
+    actions: [
+      AppButton(
+        label: 'Đóng',
+        kind: AppButtonKind.ghost,
+        onPressed: () => Navigator.pop(context),
+      ),
+      AppButton(
+        label: 'Gia hạn',
+        onPressed: _deadline == null
+            ? null
+            : () => Navigator.pop(context, _deadline),
+      ),
+    ],
+    child: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -59,18 +73,5 @@ class _ExtendTopicDialogState extends State<ExtendTopicDialog> {
         ),
       ],
     ),
-    actions: [
-      AppButton(
-        label: 'Đóng',
-        kind: AppButtonKind.ghost,
-        onPressed: () => Navigator.pop(context),
-      ),
-      AppButton(
-        label: 'Gia hạn',
-        onPressed: _deadline == null
-            ? null
-            : () => Navigator.pop(context, _deadline),
-      ),
-    ],
   );
 }

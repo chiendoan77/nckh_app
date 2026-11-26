@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/topic_status.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/dialog_frame.dart';
 import '../../topic/data/topic.dart';
 import '../../user/data/teacher.dart';
 import '../data/council.dart';
@@ -71,94 +72,8 @@ class _CouncilDetailDialogState extends ConsumerState<_CouncilDetailDialog> {
         )
         .toList();
 
-    return AlertDialog(
-      title: Text(_council.name),
-      content: SizedBox(
-        width: 600,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${_council.type.label} · ${_council.createdOn == null ? 'Chưa có ngày lập' : formatDate(_council.createdOn!)}',
-              ),
-              const SizedBox(height: 20),
-              Text('Thành viên', style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 8),
-              if (_council.members.isEmpty)
-                const Text('Chưa có thành viên.')
-              else
-                ..._council.members.map(
-                  (member) => ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(member.name),
-                    subtitle: Text(member.role.label),
-                  ),
-                ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<CouncilRole>(
-                initialValue: _role,
-                decoration: const InputDecoration(labelText: 'Vai trò'),
-                items: CouncilRole.values
-                    .map(
-                      (role) => DropdownMenuItem(
-                        value: role,
-                        child: Text(role.label),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (role) {
-                  if (role != null) {
-                    setState(() => _role = role);
-                  }
-                },
-              ),
-              SelectApply<Teacher>(
-                key: ValueKey('teachers-${_council.members.length}'),
-                label: 'Phân công thành viên',
-                options: availableTeachers,
-                labelOf: (teacher) => '${teacher.id} · ${teacher.fullName}',
-                onApply: (teacher) async {
-                  await ref
-                      .read(councilRepositoryProvider)
-                      .assignMember(_council.id, teacher: teacher, role: _role);
-                  await _refresh();
-                },
-              ),
-              const Divider(height: 32),
-              Text('Đề tài', style: Theme.of(context).textTheme.titleLarge),
-              if (_council.topicIds.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.only(top: 8),
-                  child: Text('Chưa gắn đề tài.'),
-                )
-              else
-                ..._council.topicIds.map(
-                  (id) => ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(_topicTitle(id)),
-                    subtitle: Text(id),
-                  ),
-                ),
-              SelectApply<Topic>(
-                key: ValueKey('topics-${_council.topicIds.length}'),
-                label: 'Gắn đề tài',
-                options: availableTopics,
-                labelOf: (topic) => '${topic.id} · ${topic.title}',
-                onApply: (topic) async {
-                  await ref
-                      .read(councilRepositoryProvider)
-                      .assignTopic(_council.id, topic);
-                  await _refresh();
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+    return DialogFrame(
+      title: _council.name,
       actions: [
         AppButton(
           label: 'Đóng',
@@ -166,6 +81,85 @@ class _CouncilDetailDialogState extends ConsumerState<_CouncilDetailDialog> {
           onPressed: () => Navigator.pop(context),
         ),
       ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '${_council.type.label} · ${_council.createdOn == null ? 'Chưa có ngày lập' : formatDate(_council.createdOn!)}',
+          ),
+          const SizedBox(height: 20),
+          Text('Thành viên', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 8),
+          if (_council.members.isEmpty)
+            const Text('Chưa có thành viên.')
+          else
+            ..._council.members.map(
+              (member) => ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: Text(member.name),
+                subtitle: Text(member.role.label),
+              ),
+            ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<CouncilRole>(
+            initialValue: _role,
+            decoration: const InputDecoration(labelText: 'Vai trò'),
+            items: CouncilRole.values
+                .map(
+                  (role) =>
+                      DropdownMenuItem(value: role, child: Text(role.label)),
+                )
+                .toList(),
+            onChanged: (role) {
+              if (role != null) {
+                setState(() => _role = role);
+              }
+            },
+          ),
+          SelectApply<Teacher>(
+            key: ValueKey('teachers-${_council.members.length}'),
+            label: 'Phân công thành viên',
+            options: availableTeachers,
+            labelOf: (teacher) => '${teacher.id} · ${teacher.fullName}',
+            onApply: (teacher) async {
+              await ref
+                  .read(councilRepositoryProvider)
+                  .assignMember(_council.id, teacher: teacher, role: _role);
+              await _refresh();
+            },
+          ),
+          const Divider(height: 32),
+          Text('Đề tài', style: Theme.of(context).textTheme.titleLarge),
+          if (_council.topicIds.isEmpty)
+            const Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Text('Chưa gắn đề tài.'),
+            )
+          else
+            ..._council.topicIds.map(
+              (id) => ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: Text(_topicTitle(id)),
+                subtitle: Text(id),
+              ),
+            ),
+          SelectApply<Topic>(
+            key: ValueKey('topics-${_council.topicIds.length}'),
+            label: 'Gắn đề tài',
+            options: availableTopics,
+            labelOf: (topic) => '${topic.id} · ${topic.title}',
+            onApply: (topic) async {
+              await ref
+                  .read(councilRepositoryProvider)
+                  .assignTopic(_council.id, topic);
+              await _refresh();
+            },
+          ),
+        ],
+      ),
     );
   }
 

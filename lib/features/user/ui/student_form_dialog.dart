@@ -5,6 +5,7 @@ import '../../../core/utils/validators.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_toast.dart';
+import '../../../shared/widgets/dialog_frame.dart';
 import '../../../shared/widgets/form_dialog.dart';
 import '../data/student.dart';
 import 'user_providers.dart';
@@ -167,9 +168,16 @@ class _StudentAdminDialogState extends ConsumerState<_StudentAdminDialog> {
   Widget build(BuildContext context) {
     if (widget.readOnly && widget.student != null) {
       final student = widget.student!;
-      return AlertDialog(
-        title: const Text('Thông tin sinh viên'),
-        content: Column(
+      return DialogFrame(
+        title: 'Thông tin sinh viên',
+        actions: [
+          AppButton(
+            label: 'Đóng',
+            kind: AppButtonKind.ghost,
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -180,68 +188,77 @@ class _StudentAdminDialogState extends ConsumerState<_StudentAdminDialog> {
             Text('Trạng thái: ${student.status.label}'),
           ],
         ),
-        actions: [
-          AppButton(
-            label: 'Đóng',
-            kind: AppButtonKind.ghost,
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
       );
     }
 
     return FormDialog(
       title: widget.student == null ? 'Thêm sinh viên' : 'Sửa sinh viên',
       onSubmit: _save,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final idField = TextFormField(
             key: const Key('student-id'),
             controller: _idController,
             readOnly: widget.student != null,
             decoration: const InputDecoration(labelText: 'Mã sinh viên'),
             validator: validateRequired,
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            key: const Key('student-name'),
-            controller: _nameController,
-            decoration: const InputDecoration(labelText: 'Họ tên'),
-            validator: validateRequired,
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            key: const Key('student-major'),
-            controller: _majorController,
-            decoration: const InputDecoration(labelText: 'Chuyên ngành'),
-            validator: validateRequired,
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
+          );
+          final gpaField = TextFormField(
             key: const Key('student-gpa'),
             controller: _gpaController,
             readOnly: widget.student != null,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: const InputDecoration(labelText: 'GPA'),
             validator: _validateGpa,
-          ),
-          const SizedBox(height: 12),
-          DropdownButtonFormField<StudentStatus>(
-            key: const Key('student-status'),
-            initialValue: _status,
-            decoration: const InputDecoration(labelText: 'Trạng thái'),
-            items: [
-              for (final status in StudentStatus.values)
-                DropdownMenuItem(value: status, child: Text(status.label)),
+          );
+          final shortFields = constraints.maxWidth >= 480
+              ? Row(
+                  children: [
+                    Expanded(child: idField),
+                    const SizedBox(width: 16),
+                    Expanded(child: gpaField),
+                  ],
+                )
+              : Column(
+                  children: [idField, const SizedBox(height: 16), gpaField],
+                );
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              shortFields,
+              const SizedBox(height: 16),
+              TextFormField(
+                key: const Key('student-name'),
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Họ tên'),
+                validator: validateRequired,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                key: const Key('student-major'),
+                controller: _majorController,
+                decoration: const InputDecoration(labelText: 'Chuyên ngành'),
+                validator: validateRequired,
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<StudentStatus>(
+                key: const Key('student-status'),
+                initialValue: _status,
+                decoration: const InputDecoration(labelText: 'Trạng thái'),
+                items: [
+                  for (final status in StudentStatus.values)
+                    DropdownMenuItem(value: status, child: Text(status.label)),
+                ],
+                onChanged: (status) {
+                  if (status != null) {
+                    setState(() => _status = status);
+                  }
+                },
+              ),
             ],
-            onChanged: (status) {
-              if (status != null) {
-                setState(() => _status = status);
-              }
-            },
-          ),
-        ],
+          );
+        },
       ),
     );
   }

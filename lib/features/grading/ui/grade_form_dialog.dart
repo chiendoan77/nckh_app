@@ -5,6 +5,7 @@ import '../../../core/network/api_error.dart';
 import '../../../core/utils/validators.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_toast.dart';
+import '../../../shared/widgets/dialog_frame.dart';
 import '../../../shared/widgets/form_dialog.dart';
 import '../../../shared/widgets/state_views.dart';
 import '../../topic/data/topic.dart';
@@ -26,14 +27,13 @@ class _GradeFormDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final grade = ref.watch(gradeProvider(topic.id));
     return grade.when(
-      loading: () =>
-          AlertDialog(title: Text(topic.title), content: const LoadingView()),
-      error: (error, _) => AlertDialog(
-        title: Text(topic.title),
-        content: ErrorView(
-          message: error is ApiError ? error.message : '$error',
-          onRetry: () => ref.invalidate(gradeProvider(topic.id)),
-        ),
+      loading: () => DialogFrame(
+        title: topic.title,
+        actions: const [],
+        child: const LoadingView(),
+      ),
+      error: (error, _) => DialogFrame(
+        title: topic.title,
         actions: [
           AppButton(
             label: 'Đóng',
@@ -41,6 +41,10 @@ class _GradeFormDialog extends ConsumerWidget {
             onPressed: () => Navigator.pop(context),
           ),
         ],
+        child: ErrorView(
+          message: error is ApiError ? error.message : '$error',
+          onRetry: () => ref.invalidate(gradeProvider(topic.id)),
+        ),
       ),
       data: (value) => _GradeForm(topic: topic, grade: value),
     );

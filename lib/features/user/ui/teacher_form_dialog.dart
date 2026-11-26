@@ -5,6 +5,7 @@ import '../../../core/constants/user_role.dart';
 import '../../../core/utils/validators.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_toast.dart';
+import '../../../shared/widgets/dialog_frame.dart';
 import '../../../shared/widgets/form_dialog.dart';
 import '../data/teacher.dart';
 import 'user_providers.dart';
@@ -18,9 +19,16 @@ Future<void> showTeacherFormDialog(
   if (readOnly && teacher != null) {
     return showDialog<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Thông tin giảng viên'),
-        content: Column(
+      builder: (dialogContext) => DialogFrame(
+        title: 'Thông tin giảng viên',
+        actions: [
+          AppButton(
+            label: 'Đóng',
+            kind: AppButtonKind.ghost,
+            onPressed: () => Navigator.pop(dialogContext),
+          ),
+        ],
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -34,13 +42,6 @@ Future<void> showTeacherFormDialog(
             ),
           ],
         ),
-        actions: [
-          AppButton(
-            label: 'Đóng',
-            kind: AppButtonKind.ghost,
-            onPressed: () => Navigator.pop(dialogContext),
-          ),
-        ],
       ),
     );
   }
@@ -117,83 +118,114 @@ class _TeacherFormDialogState extends ConsumerState<_TeacherFormDialog> {
   Widget build(BuildContext context) => FormDialog(
     title: widget.teacher == null ? 'Thêm giảng viên' : 'Sửa giảng viên',
     onSubmit: _save,
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextFormField(
+    child: LayoutBuilder(
+      builder: (context, constraints) {
+        final idField = TextFormField(
           key: const Key('teacher-id'),
           controller: _idController,
           readOnly: widget.teacher != null,
           decoration: const InputDecoration(labelText: 'Mã giảng viên'),
           validator: validateRequired,
-        ),
-        const SizedBox(height: 12),
-        TextFormField(
-          key: const Key('teacher-name'),
-          controller: _nameController,
-          decoration: const InputDecoration(labelText: 'Họ tên'),
-          validator: validateRequired,
-        ),
-        const SizedBox(height: 12),
-        TextFormField(
-          key: const Key('teacher-faculty'),
-          controller: _facultyController,
-          decoration: const InputDecoration(labelText: 'Khoa'),
-          validator: validateRequired,
-        ),
-        const SizedBox(height: 12),
-        TextFormField(
+        );
+        final degreeField = TextFormField(
           key: const Key('teacher-degree'),
           controller: _degreeController,
           decoration: const InputDecoration(labelText: 'Học vị'),
           validator: validateRequired,
-        ),
-        const SizedBox(height: 12),
-        TextFormField(
-          key: const Key('teacher-email'),
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(labelText: 'Email'),
-          validator: validateRequired,
-        ),
-        const SizedBox(height: 12),
-        FormField<List<UserRole>>(
+        );
+        final shortFields = constraints.maxWidth >= 480
+            ? Row(
+                children: [
+                  Expanded(child: idField),
+                  const SizedBox(width: 16),
+                  Expanded(child: degreeField),
+                ],
+              )
+            : Column(
+                children: [idField, const SizedBox(height: 16), degreeField],
+              );
+        final roleField = FormField<List<UserRole>>(
           initialValue: _positions,
           validator: (roles) => roles == null || roles.isEmpty
               ? 'Chọn ít nhất một chức vụ.'
               : null,
-          builder: (field) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CheckboxListTile(
-                key: const Key('teacher-role-manager'),
-                contentPadding: EdgeInsets.zero,
-                title: const Text('Quản lý'),
-                value: field.value?.contains(UserRole.manager) ?? false,
-                onChanged: (selected) =>
-                    _toggleRole(field, UserRole.manager, selected ?? false),
-              ),
-              CheckboxListTile(
-                key: const Key('teacher-role-teacher'),
-                contentPadding: EdgeInsets.zero,
-                title: const Text('Giảng viên'),
-                value: field.value?.contains(UserRole.teacher) ?? false,
-                onChanged: (selected) =>
-                    _toggleRole(field, UserRole.teacher, selected ?? false),
-              ),
-              if (field.errorText != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 12),
-                  child: Text(
-                    field.errorText!,
-                    style: Theme.of(context).textTheme.bodySmall
-                        ?.copyWith(color: Theme.of(context).colorScheme.error),
+          builder: (field) {
+            final manager = CheckboxListTile(
+              key: const Key('teacher-role-manager'),
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              title: const Text('Quản lý'),
+              value: field.value?.contains(UserRole.manager) ?? false,
+              onChanged: (selected) =>
+                  _toggleRole(field, UserRole.manager, selected ?? false),
+            );
+            final teacher = CheckboxListTile(
+              key: const Key('teacher-role-teacher'),
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              title: const Text('Giảng viên'),
+              value: field.value?.contains(UserRole.teacher) ?? false,
+              onChanged: (selected) =>
+                  _toggleRole(field, UserRole.teacher, selected ?? false),
+            );
+            final roles = constraints.maxWidth >= 480
+                ? Row(
+                    children: [
+                      Expanded(child: manager),
+                      Expanded(child: teacher),
+                    ],
+                  )
+                : Column(children: [manager, teacher]);
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                roles,
+                if (field.errorText != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: Text(
+                      field.errorText!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
                   ),
-                ),
-            ],
-          ),
-        ),
-      ],
+              ],
+            );
+          },
+        );
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            shortFields,
+            const SizedBox(height: 16),
+            TextFormField(
+              key: const Key('teacher-name'),
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Họ tên'),
+              validator: validateRequired,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              key: const Key('teacher-faculty'),
+              controller: _facultyController,
+              decoration: const InputDecoration(labelText: 'Khoa'),
+              validator: validateRequired,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              key: const Key('teacher-email'),
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(labelText: 'Email'),
+              validator: validateRequired,
+            ),
+            const SizedBox(height: 16),
+            roleField,
+          ],
+        );
+      },
     ),
   );
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../app/theme/app_tokens.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_toast.dart';
+import '../../../shared/widgets/dialog_frame.dart';
 import '../data/topic.dart';
 
 Future<void> showTeacherDialog(
@@ -11,47 +11,8 @@ Future<void> showTeacherDialog(
   Topic topic,
 ) => showDialog<void>(
   context: context,
-  builder: (dialogContext) => AlertDialog(
-    title: Text(topic.title),
-    content: ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: AppTokens.readableWidth),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Giảng viên: ${topic.supervisor?.fullName ?? 'Chưa phân công'}',
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Sinh viên tham gia',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            if (topic.memberNames.isEmpty)
-              const Text('Chưa có sinh viên tham gia.')
-            else
-              for (final name in topic.memberNames) Text(name),
-            const SizedBox(height: 12),
-            Text(
-              'Giai đoạn: ${topic.phase.isEmpty ? 'Chưa cập nhật' : topic.phase}',
-            ),
-            const SizedBox(height: 12),
-            Text('Tài liệu', style: Theme.of(context).textTheme.titleLarge),
-            if (topic.documents.isEmpty)
-              const Text('Chưa có tài liệu.')
-            else
-              for (final document in topic.documents)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(document.name),
-                  trailing: const Icon(Icons.open_in_new),
-                  onTap: () => _openDocument(dialogContext, document),
-                ),
-          ],
-        ),
-      ),
-    ),
+  builder: (dialogContext) => DialogFrame(
+    title: topic.title,
     actions: [
       AppButton(
         label: 'Đóng',
@@ -59,6 +20,38 @@ Future<void> showTeacherDialog(
         onPressed: () => Navigator.pop(dialogContext),
       ),
     ],
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('Giảng viên: ${topic.supervisor?.fullName ?? 'Chưa phân công'}'),
+        const SizedBox(height: 12),
+        Text(
+          'Sinh viên tham gia',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        if (topic.memberNames.isEmpty)
+          const Text('Chưa có sinh viên tham gia.')
+        else
+          for (final name in topic.memberNames) Text(name),
+        const SizedBox(height: 12),
+        Text(
+          'Giai đoạn: ${topic.phase.isEmpty ? 'Chưa cập nhật' : topic.phase}',
+        ),
+        const SizedBox(height: 12),
+        Text('Tài liệu', style: Theme.of(context).textTheme.titleLarge),
+        if (topic.documents.isEmpty)
+          const Text('Chưa có tài liệu.')
+        else
+          for (final document in topic.documents)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(document.name),
+              trailing: const Icon(Icons.open_in_new),
+              onTap: () => _openDocument(dialogContext, document),
+            ),
+      ],
+    ),
   ),
 );
 

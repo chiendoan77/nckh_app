@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/dialog_frame.dart';
 
 Future<String?> showCancelTopicDialog(BuildContext context) =>
     showDialog<String>(
@@ -26,20 +27,8 @@ class _CancelTopicDialogState extends State<CancelTopicDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Lý do hủy đề tài'),
-    content: Form(
-      key: _formKey,
-      child: TextFormField(
-        controller: _reasonController,
-        decoration: const InputDecoration(labelText: 'Lý do'),
-        minLines: 2,
-        maxLines: 4,
-        validator: (value) => value == null || value.trim().isEmpty
-            ? 'Vui lòng nhập lý do hủy đề tài.'
-            : null,
-      ),
-    ),
+  Widget build(BuildContext context) => DialogFrame(
+    title: 'Lý do hủy đề tài',
     actions: [
       AppButton(
         label: 'Quay lại',
@@ -56,5 +45,17 @@ class _CancelTopicDialogState extends State<CancelTopicDialog> {
         },
       ),
     ],
+    child: Form(
+      key: _formKey,
+      child: TextFormField(
+        controller: _reasonController,
+        decoration: const InputDecoration(labelText: 'Lý do'),
+        minLines: 3,
+        maxLines: 6,
+        validator: (value) => value == null || value.trim().isEmpty
+            ? 'Vui lòng nhập lý do hủy đề tài.'
+            : null,
+      ),
+    ),
   );
 }

@@ -66,18 +66,16 @@ class _CouncilFormDialogState extends State<_CouncilFormDialog> {
     submitText: 'Tạo hội đồng',
     onSubmit: () =>
         widget.onSubmit(_nameController.text.trim(), _type, _createdOn),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextFormField(
+    child: LayoutBuilder(
+      builder: (context, constraints) {
+        final nameField = TextFormField(
           controller: _nameController,
           decoration: const InputDecoration(labelText: 'Tên hội đồng'),
           validator: (value) => value == null || value.trim().isEmpty
               ? 'Vui lòng nhập tên hội đồng.'
               : null,
-        ),
-        const SizedBox(height: 16),
-        DropdownButtonFormField<CouncilType>(
+        );
+        final typeField = DropdownButtonFormField<CouncilType>(
           initialValue: _type,
           decoration: const InputDecoration(labelText: 'Loại hội đồng'),
           items: CouncilType.values
@@ -91,9 +89,8 @@ class _CouncilFormDialogState extends State<_CouncilFormDialog> {
               setState(() => _type = type);
             }
           },
-        ),
-        const SizedBox(height: 16),
-        TextFormField(
+        );
+        final dateField = TextFormField(
           readOnly: true,
           controller: _dateController,
           decoration: const InputDecoration(
@@ -101,8 +98,24 @@ class _CouncilFormDialogState extends State<_CouncilFormDialog> {
             suffixIcon: Icon(Icons.calendar_today),
           ),
           onTap: _chooseDate,
-        ),
-      ],
+        );
+        final shortFields = constraints.maxWidth >= 480
+            ? Row(
+                children: [
+                  Expanded(child: typeField),
+                  const SizedBox(width: 16),
+                  Expanded(child: dateField),
+                ],
+              )
+            : Column(
+                children: [typeField, const SizedBox(height: 16), dateField],
+              );
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [nameField, const SizedBox(height: 16), shortFields],
+        );
+      },
     ),
   );
 }
