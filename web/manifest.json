@@ -1,11 +1,11 @@
 {
-    "name": "nckh_app",
-    "short_name": "nckh_app",
+    "name": "Quản lý đề tài NCKH – ĐH Quy Nhơn",
+    "short_name": "Quản lý NCKH",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#F4F6F8",
+    "theme_color": "#0F2A3D",
+    "description": "Hệ thống quản lý đề tài nghiên cứu khoa học Trường Đại học Quy Nhơn.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
