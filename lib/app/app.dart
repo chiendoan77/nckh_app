@@ -12,7 +12,7 @@ class NckhApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(sessionProvider);
     return MaterialApp.router(
-      title: 'Quản lý đề tài nghiên cứu khoa học',
+      title: 'Quản lý NCKH – ĐH Quy Nhơn',
       theme: AppTheme.of(session?.activeRole),
       routerConfig: ref.watch(routerProvider),
     );
