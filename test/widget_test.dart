@@ -8,15 +8,20 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:nckh_app/main.dart';
+import 'package:nckh_app/shared/widgets/hexagon_logo.dart';
+import 'package:nckh_app/shared/widgets/user_avatar.dart';
 
 void main() {
-  testWidgets('Hiển thị màn hình khởi tạo', (WidgetTester tester) async {
+  testWidgets('Hiển thị màn hình demo thành phần nền tảng', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const NckhApp());
 
-    expect(
-      find.text('Hệ thống quản lý đề tài nghiên cứu khoa học'),
-      findsOneWidget,
-    );
-    expect(find.text('Dự án đang được khởi tạo.'), findsOneWidget);
+    expect(find.text('Thành phần nền tảng'), findsOneWidget);
+    expect(find.text('Nút chính'), findsOneWidget);
+    expect(find.text('Nút phụ'), findsOneWidget);
+    expect(find.text('Nút nguy hiểm'), findsOneWidget);
+    expect(find.byType(HexagonLogo), findsOneWidget);
+    expect(find.byType(UserAvatar), findsOneWidget);
   });
 }
