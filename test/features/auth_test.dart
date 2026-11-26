@@ -6,10 +6,46 @@ import 'package:nckh_app/app/router/app_router.dart';
 import 'package:nckh_app/app/router/paths.dart';
 import 'package:nckh_app/app/theme/app_tokens.dart';
 import 'package:nckh_app/core/auth/session.dart';
+import 'package:nckh_app/features/auth/ui/login_page.dart';
 import 'package:nckh_app/shared/layout/app_shell.dart';
+import 'package:nckh_app/shared/widgets/hexagon_logo.dart';
 import 'package:nckh_app/shared/widgets/user_avatar.dart';
 
 void main() {
+  testWidgets('Màn hình đăng nhập rộng có giới thiệu và biểu mẫu', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LoginPage())),
+    );
+
+    expect(find.text('TRƯỜNG ĐẠI HỌC QUY NHƠN'), findsOneWidget);
+    expect(find.text('Đăng nhập'), findsNWidgets(2));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Màn hình đăng nhập hẹp chỉ giữ biểu mẫu và logo', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      const ProviderScope(child: MaterialApp(home: LoginPage())),
+    );
+
+    expect(find.byType(HexagonLogo), findsOneWidget);
+    expect(find.text('TRƯỜNG ĐẠI HỌC QUY NHƠN'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Sinh viên mở hồ sơ đầy đủ từ ảnh đại diện', (tester) async {
     final container = await _loginAs(tester, 'sv001', '123456');
     addTearDown(container.dispose);
