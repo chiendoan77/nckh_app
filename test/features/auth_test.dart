@@ -50,7 +50,8 @@ void main() {
       Paths.studentTopics,
     );
     await _openMenu(tester);
-    expect(find.text('Đăng ký đề tài'), findsNWidgets(2));
+    expect(find.text('Đăng ký đề tài'), findsOneWidget);
+    expect(find.text('+ Đề xuất đề tài'), findsOneWidget);
     expect(find.text('Tra cứu điểm'), findsOneWidget);
     expect(find.text('Công việc'), findsNothing);
 
